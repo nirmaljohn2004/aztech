@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation } from "react-router";
 import { Monitor, Menu, X, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { useState } from "react";
+import aztechLogo from "../../assets/aztech_logo.svg";
 
 export function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,7 +28,7 @@ export function Layout() {
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 h-full">
-              <img src="/src/assets/aztech_logo.svg" alt="AZTECH logo" className="h-full w-auto" />
+              <img src={aztechLogo} alt="AZTECH logo" className="h-full w-auto" />
             </Link>
 
             {/* Desktop Navigation */}
@@ -103,7 +104,7 @@ export function Layout() {
             {/* Company Info */}
             <div className="space-y-4">
               <Link to="/" className="flex items-center gap-2">
-                <img src="/src/assets/aztech_logo.svg" alt="AZTECH logo" className="h-10 w-auto" />
+                <img src={aztechLogo} alt="AZTECH logo" className="h-10 w-auto" />
               </Link>
               <p className="text-neutral-400 text-sm leading-relaxed">
                 Professional supplier of high-quality LED display solutions for events, advertising, and commercial spaces across the UAE.
