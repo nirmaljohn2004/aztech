@@ -62,7 +62,7 @@ export function HeroSection() {
 
   return (
     <section id="top" className="hero">
-      <div className="hero-bg" aria-hidden="true">
+      <div className="hero-bg scroll-drift" data-scroll-speed="-22" aria-hidden="true">
         <video autoPlay muted loop playsInline className="hero-video">
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
@@ -71,7 +71,7 @@ export function HeroSection() {
       </div>
 
       <div className="hero-streak" />
-      <div className="hero-particles" aria-hidden="true">
+      <div className="hero-particles scroll-drift" data-scroll-speed="-10" aria-hidden="true">
         {[...Array(18)].map((_, index) => (
           <div key={index} className={`particle p${index + 1}`} />
         ))}
@@ -97,7 +97,7 @@ export function HeroSection() {
         </Link>
       </nav>
 
-      <div className="hero-content">
+      <div className="hero-content scroll-drift" data-scroll-speed="18">
         <div className="hero-glow" />
 
         <div className="hero-eyebrow-wrap">
@@ -146,7 +146,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="hero-footer">
+      <div className="hero-footer scroll-drift" data-scroll-speed="10">
         <div className="hero-scroll">
           <span>Scroll</span>
           <div className="scroll-line">

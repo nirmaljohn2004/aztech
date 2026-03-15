@@ -1,71 +1,134 @@
-import { MonitorPlay, Settings, ShieldCheck, MapPin, HeadphonesIcon } from "lucide-react";
 import { useReveal } from "../../hooks/useReveal";
 
-const features = [
+const standards = [
+  { label: "Product Quality", pct: 98 },
+  { label: "On-time Delivery", pct: 95 },
+  { label: "Client Satisfaction", pct: 99 },
+  { label: "After-sales Support", pct: 96 },
+];
+
+const cards = [
   {
-    icon: MonitorPlay,
-    title: "High-Resolution Displays",
-    description: "Crystal clear image quality that guarantees maximum visibility and impact.",
+    icon: "◈",
+    title: "Premium Hardware",
+    desc: "Top-tier LED cabinets sourced from certified manufacturers with full warranty.",
+    color: "#2563EB",
   },
   {
-    icon: Settings,
-    title: "Professional Installation",
-    description: "Expert setup by certified technicians ensuring safe and secure mounting.",
+    icon: "⬡",
+    title: "Expert Installation",
+    desc: "In-house technical team with 15+ years of LED installation experience.",
+    color: "#E8B84B",
   },
   {
-    icon: ShieldCheck,
-    title: "Reliable Performance",
-    description: "Built for endurance with premium components for uninterrupted display.",
+    icon: "◉",
+    title: "Fast Support",
+    desc: "24/7 after-sales support with same-day response across the UAE.",
+    color: "#00D4FF",
   },
   {
-    icon: MapPin,
-    title: "UAE-Wide Service",
-    description: "Nationwide coverage for delivery, installation, and on-site support.",
-  },
-  {
-    icon: HeadphonesIcon,
-    title: "After-Sales Support",
-    description: "Dedicated technical assistance and maintenance programs.",
+    icon: "▣",
+    title: "Custom Solutions",
+    desc: "Bespoke LED designs for any shape, size, and environment requirement.",
+    color: "#60A5FA",
   },
 ];
 
 export function WhyChooseUs() {
-  const [sectionRef, visible] = useReveal(0.12);
+  const [excellenceRef, excVisible] = useReveal(0.12);
 
   return (
-    <section ref={sectionRef} id="services" className={`py-24 bg-neutral-900 border-y border-neutral-800 relative overflow-hidden scroll-mt-24 ${visible ? "visible" : ""}`}>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[120px] pointer-events-none" />
+    <section ref={excellenceRef} id="services" className="excellence-section scroll-mt-24">
+      <div className="exc-bg-glow scroll-drift" data-scroll-speed="-20" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className={`text-center max-w-3xl mx-auto mb-16 reveal ${visible ? "visible" : ""}`}>
-          <h2 className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3">Why Choose Us</h2>
-          <h3 className={`font-['Poppins',_sans-serif] text-4xl lg:text-5xl font-bold text-white mb-6 underline-draw ${visible ? "visible" : ""}`}>
-            Committed to Excellence
-          </h3>
-          <p className="text-neutral-400 text-lg">
-            We deliver top-tier LED display solutions backed by industry expertise, technical support, and a proven track record across the UAE.
+      <div className="exc-inner section-shell">
+        <div className="exc-left scroll-drift" data-scroll-speed="12">
+          <div className={`exc-eyebrow ${excVisible ? "visible" : ""}`}>
+            <span className="eyebrow-dot" />
+            Our Standards
+          </div>
+
+          <h2 className="exc-headline">
+            <span className="clip-wrap">
+              <span
+                className={`clip-text ${excVisible ? "visible" : ""}`}
+                style={{ transitionDelay: "0.1s" }}
+              >
+                Committed
+              </span>
+            </span>
+            <span className="clip-wrap">
+              <span
+                className={`clip-text ${excVisible ? "visible" : ""}`}
+                style={{ transitionDelay: "0.22s" }}
+              >
+                to
+              </span>
+            </span>
+            <span className="clip-wrap">
+              <span
+                className={`clip-text shimmer-text ${excVisible ? "visible" : ""}`}
+                style={{ transitionDelay: "0.36s" }}
+              >
+                Excellence.
+              </span>
+            </span>
+          </h2>
+
+          <p
+            className={`exc-body reveal ${excVisible ? "visible" : ""}`}
+            style={{ transitionDelay: "0.55s" }}
+          >
+            We deliver top-tier LED display solutions backed by industry expertise,
+            technical support, and a proven track record across the UAE.
           </p>
+
+          <div
+            className={`exc-bars reveal ${excVisible ? "visible" : ""}`}
+            style={{ transitionDelay: "0.7s" }}
+          >
+            {standards.map((bar, index) => (
+              <div key={bar.label} className="exc-bar-row">
+                <div className="exc-bar-header">
+                  <span className="exc-bar-label">{bar.label}</span>
+                  <span className="exc-bar-pct">{bar.pct}%</span>
+                </div>
+                <div className="exc-bar-track">
+                  <div
+                    className={`exc-bar-fill ${excVisible ? "visible" : ""}`}
+                    style={{
+                      width: excVisible ? `${bar.pct}%` : "0%",
+                      transitionDelay: `${0.85 + index * 0.15}s`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
+        <div className="exc-right scroll-drift" data-scroll-speed="-10">
+          {cards.map((card, index) => (
+            <div
+              key={card.title}
+              className={`exc-card reveal-scale ${excVisible ? "visible" : ""}`}
+              style={{ transitionDelay: `${0.3 + index * 0.12}s` }}
+            >
               <div
-                key={feature.title}
-                className={`service-card bg-neutral-950 p-8 rounded-2xl border border-neutral-800 opacity-0 translate-y-7 group ${visible ? "visible" : ""}`}
-                style={{ transitionDelay: `${index * 0.08}s` }}
+                className="exc-card-icon"
+                style={{
+                  color: card.color,
+                  background: `${card.color}18`,
+                  border: `1px solid ${card.color}40`,
+                }}
               >
-                <div className="service-icon-wrap bg-blue-600/10 w-14 h-14 rounded-xl flex items-center justify-center mb-6">
-                  <Icon className="w-7 h-7 text-blue-500" />
-                </div>
-                <h4 className="service-title font-['Poppins',_sans-serif] text-xl font-bold text-white mb-3">
-                  {feature.title}
-                </h4>
-                <p className="text-neutral-400 text-sm leading-relaxed">{feature.description}</p>
+                {card.icon}
               </div>
-            );
-          })}
+              <h4 className="exc-card-title">{card.title}</h4>
+              <p className="exc-card-desc">{card.desc}</p>
+              <div className="exc-card-line" style={{ background: card.color }} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

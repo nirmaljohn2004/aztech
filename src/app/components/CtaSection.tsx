@@ -7,11 +7,12 @@ export function CtaSection() {
 
   return (
     <section ref={sectionRef} id="contact" className={`cta-section py-24 bg-blue-600 relative overflow-hidden scroll-mt-24 ${visible ? "visible" : ""}`}>
-      <div className="absolute inset-0 z-0 opacity-10 mix-blend-overlay pointer-events-none">
+      <div className="absolute inset-0 z-0 opacity-10 mix-blend-overlay pointer-events-none scroll-drift" data-scroll-speed="-18">
         <div className="absolute -top-[50%] -left-[10%] w-[120%] h-[200%] bg-[radial-gradient(circle_at_center,white,transparent_60%)] rotate-12 blur-3xl" />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center scroll-drift" data-scroll-speed="12">
+        <div className="cta-panel">
         <div className={`reveal-scale ${visible ? "visible" : ""}`}>
           <div className="inline-flex justify-center items-center w-16 h-16 rounded-full bg-white/20 mb-8 backdrop-blur-sm border border-white/30">
             <Mail className="w-8 h-8 text-white" />
@@ -39,6 +40,7 @@ export function CtaSection() {
               Call Us Now
             </a>
           </div>
+        </div>
         </div>
       </div>
     </section>

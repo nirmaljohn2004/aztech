@@ -1,128 +1,271 @@
-import { useEffect, useRef } from "react";
-import { Link } from "react-router";
-import { ArrowRight, Maximize2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReveal } from "../../hooks/useReveal";
 
-const projects = [
+type Project = {
+  id: number;
+  category: string;
+  title: string;
+  location: string;
+  size: "LARGE" | "SMALL";
+  image: string;
+};
+
+const projects: Project[] = [
   {
-    image: "https://images.unsplash.com/photo-1640225720183-c990a117b205?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaG9wcGluZyUyMG1hbGwlMjBsZWQlMjBkaXNwbGF5fGVufDF8fHx8MTc3MzQxMjM0MHww&ixlib=rb-4.1.0&q=80&w=1080",
-    title: "Mall Digital Signage",
-    category: "Retail",
+    id: 1,
+    category: "MALL",
+    title: "Dubai Mall LED Wall",
+    location: "Dubai, UAE",
+    size: "LARGE",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=90",
   },
   {
-    image: "https://images.unsplash.com/photo-1740968984962-29087e16ceff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBldmVudCUyMGxlZCUyMHNjcmVlbnxlbnwxfHx8fDE3NzM0MTIzNDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    title: "Corporate Summit Stage",
-    category: "Events",
+    id: 2,
+    category: "OUTDOOR",
+    title: "City Billboard Display",
+    location: "Abu Dhabi, UAE",
+    size: "SMALL",
+    image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=800&q=90",
   },
   {
-    image: "https://images.unsplash.com/photo-1767555843619-19966e625551?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxleGhpYml0aW9uJTIwYm9vdGglMjBsZWQlMjBzY3JlZW58ZW58MXx8fHwxNzczNDEyMzQxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    title: "Expo Display Booth",
-    category: "Exhibitions",
+    id: 3,
+    category: "CORPORATE",
+    title: "Hotel Lobby Screen",
+    location: "Business Bay, Dubai",
+    size: "SMALL",
+    image: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&w=800&q=90",
   },
   {
-    image: "https://images.unsplash.com/photo-1693321562840-e977737831e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFkaXVtJTIwc2NyZWVuJTIwbGVkfGVufDF8fHx8MTc3MzQxMjM0MXww&ixlib=rb-4.1.0&q=80&w=1080",
-    title: "Stadium Scoreboard",
-    category: "Sports",
+    id: 4,
+    category: "STADIUM",
+    title: "Sports Arena Perimeter",
+    location: "Sharjah, UAE",
+    size: "SMALL",
+    image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800&q=90",
   },
   {
-    image: "https://images.unsplash.com/photo-1766324488354-a189b706d3e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidWlsZGluZyUyMGZhY2FkZSUyMGxlZCUyMHNjcmVlbnxlbnwxfHx8fDE3NzM0MTIzNDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    title: "Building Facade Display",
-    category: "Outdoor",
+    id: 5,
+    category: "EVENTS",
+    title: "Concert Stage LED Wall",
+    location: "Expo City, Dubai",
+    size: "LARGE",
+    image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1200&q=90",
   },
   {
-    image: "https://images.unsplash.com/photo-1570653882140-d074bd791982?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaiUyMGZlc3RpdmFsJTIwc3RhZ2UlMjBsZWR8ZW58MXx8fHwxNzczNDEyMzQxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    title: "Music Festival Stage",
-    category: "Entertainment",
+    id: 6,
+    category: "GOVERNMENT",
+    title: "ADNOC HQ Display",
+    location: "Abu Dhabi, UAE",
+    size: "SMALL",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=90",
   },
+  {
+    id: 7,
+    category: "OUTDOOR",
+    title: "Roadside Digital Signage",
+    location: "Sheikh Zayed Road",
+    size: "SMALL",
+    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=90",
+  },
+  {
+    id: 8,
+    category: "MALL",
+    title: "Retail Store Display",
+    location: "Mall of Emirates",
+    size: "SMALL",
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=90",
+  },
+];
+
+const filters = ["All", "Mall", "Outdoor", "Corporate", "Stadium", "Events", "Government"];
+const marqueeClients = [
+  "Dubai Mall",
+  "ADNOC",
+  "RTA",
+  "Carrefour",
+  "Oberoi Hotels",
+  "Zulekha Hospital",
+  "Gems Education",
+  "Rove Hotels",
+  "Dubai Cricket Stadium",
+  "Emaar",
 ];
 
 export function ProjectsGallery() {
   const [sectionRef, visible] = useReveal(0.12);
-  const tilesRef = useRef<Array<HTMLDivElement | null>>([]);
+  const [tilesVisible, setTilesVisible] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("All");
+  const tileRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const gridRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const tiles = tilesRef.current.filter(Boolean) as HTMLDivElement[];
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setTilesVisible(true);
+      },
+      { threshold: 0.08 },
+    );
 
-    const cleanups = tiles.map((tile) => {
-      const onMouseMove = (event: MouseEvent) => {
-        const rect = tile.getBoundingClientRect();
-        const xPct = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-        const yPct = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-        tile.style.transform = `scale(1.02) rotateY(${xPct * 6}deg) rotateX(${yPct * -4}deg)`;
-      };
+    const node = gridRef.current;
+    if (node) observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
-      const onMouseLeave = () => {
-        tile.style.transform = visible ? "scale(1) translateY(0)" : "scale(0.92) translateY(20px)";
-        tile.style.transition = "transform 0.6s cubic-bezier(0.22,1,0.36,1)";
-      };
+  const filteredProjects = useMemo(() => {
+    if (activeFilter === "All") return projects;
+    return projects.filter((project) => project.category === activeFilter.toUpperCase());
+  }, [activeFilter]);
 
-      tile.addEventListener("mousemove", onMouseMove);
-      tile.addEventListener("mouseleave", onMouseLeave);
+  const handleTilt = (event: React.MouseEvent<HTMLDivElement>, index: number) => {
+    const tile = tileRefs.current[index];
+    if (!tile) return;
 
-      return () => {
-        tile.removeEventListener("mousemove", onMouseMove);
-        tile.removeEventListener("mouseleave", onMouseLeave);
-      };
-    });
+    const rect = tile.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const xPct = (x / rect.width - 0.5) * 2;
+    const yPct = (y / rect.height - 0.5) * 2;
 
-    return () => cleanups.forEach((cleanup) => cleanup());
-  }, [visible]);
+    tile.style.transform = `scale(1.02) rotateY(${xPct * 5}deg) rotateX(${yPct * -3}deg) translateZ(0)`;
+    tile.style.transition = "transform 0.1s ease";
+  };
+
+  const resetTilt = (index: number) => {
+    const tile = tileRefs.current[index];
+    if (!tile) return;
+    tile.style.transform = tilesVisible ? "translateY(0) scale(1)" : "translateY(32px) scale(0.96)";
+    tile.style.transition = "transform 0.6s cubic-bezier(0.22,1,0.36,1)";
+  };
 
   return (
-    <section ref={sectionRef} id="projects" className={`py-24 bg-neutral-950 scroll-mt-24 ${visible ? "visible" : ""}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`flex flex-col md:flex-row justify-between items-end gap-8 mb-16 reveal ${visible ? "visible" : ""}`}>
-          <div className="max-w-2xl">
-            <h2 className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3">Our Work</h2>
-            <h3 className={`font-['Poppins',_sans-serif] text-4xl lg:text-5xl font-bold text-white mb-6 underline-draw ${visible ? "visible" : ""}`}>
-              Featured Projects
-            </h3>
-            <p className="text-neutral-400 text-lg">
-              Our LED installations reflect our quality and professionalism. Explore some of our latest installations across various industries in the UAE.
-            </p>
+    <section
+      ref={sectionRef}
+      id="projects"
+      className={`projects-section bg-neutral-950 scroll-mt-24 ${visible ? "visible" : ""}`}
+    >
+      <div className="projects-shell section-shell">
+      <div className="projects-header scroll-drift" data-scroll-speed="12">
+        <div className="projects-header-left">
+          <div className="section-eyebrow">
+            <span className="eyebrow-dot" />
+            Featured Projects
           </div>
-          <Link
-            to="/projects"
-            className="hidden md:inline-flex justify-center items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-700 hover:border-blue-500 px-6 py-3 rounded-lg font-medium text-sm transition-all whitespace-nowrap"
-          >
-            View All Projects
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <h2 className="projects-title">
+            <span className="clip-wrap">
+              <span
+                className={`clip-text ${visible ? "visible" : ""}`}
+                style={{ transitionDelay: "0.05s" }}
+              >
+                Landmark
+              </span>
+            </span>
+            <span className="clip-wrap">
+              <span
+                className={`clip-text shimmer-text ${visible ? "visible" : ""}`}
+                style={{ transitionDelay: "0.2s" }}
+              >
+                Installations
+              </span>
+            </span>
+          </h2>
+          <p className="projects-subtitle">
+            500+ completed LED projects across the UAE and GCC - from luxury hotels to
+            government infrastructure.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, index) => (
-            <div
-              key={project.title}
-              ref={(node) => {
-                tilesRef.current[index] = node;
+        <div className="projects-header-right">
+          <div className="project-counter">
+            <span className="counter-num">500</span>
+            <span className="counter-plus">+</span>
+            <span className="counter-label">Projects Delivered</span>
+          </div>
+          <a href="#contact" className="projects-cta-btn">
+            View All Projects
+            <span className="btn-arrow-wrap">-&gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <div className="project-filters scroll-drift" data-scroll-speed="8">
+        {filters.map((filter) => (
+          <button
+            key={filter}
+            type="button"
+            className={`filter-btn ${activeFilter === filter ? "active" : ""}`}
+            onClick={() => setActiveFilter(filter)}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
+      <div ref={gridRef} className="projects-bento scroll-drift" data-scroll-speed="-8">
+        {filteredProjects.map((project, index) => (
+          <div
+            key={project.id}
+            ref={(element) => {
+              tileRefs.current[index] = element;
+            }}
+            className={`bento-tile ${project.size === "LARGE" ? "bento-large" : "bento-small"} ${tilesVisible ? "visible" : ""}`}
+            style={{ transitionDelay: `${index * 0.1}s` }}
+            onMouseMove={(event) => handleTilt(event, index)}
+            onMouseLeave={() => resetTilt(index)}
+          >
+            <img
+              src={project.image}
+              alt={project.title}
+              className="bento-img"
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.src =
+                  "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80";
               }}
-              className={`project-tile relative group overflow-hidden rounded-xl aspect-[4/3] bg-neutral-900 border border-neutral-800 opacity-0 scale-[0.92] translate-y-5 ${visible ? "visible" : ""}`}
-              style={{ transitionDelay: `${index * 0.08}s` }}
-            >
-              <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-              <div className="project-tile-overlay absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/40 to-transparent flex flex-col justify-end p-6">
-                <div>
-                  <div className="project-tile-tag text-blue-400 text-sm font-semibold tracking-wider uppercase mb-1">{project.category}</div>
-                  <h4 className="project-tile-name font-['Poppins',_sans-serif] text-xl font-bold text-white mb-2">{project.title}</h4>
-                </div>
-                <div className="absolute top-4 right-4 bg-white/10 p-2 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 border border-white/20">
-                  <Maximize2 className="w-5 h-5 text-white" />
-                </div>
+            />
+
+            <div className="bento-bar">
+              <span className="bento-category">{project.category}</span>
+              <span className="bento-location">{project.location}</span>
+            </div>
+
+            <div className="bento-overlay">
+              <div className="bento-overlay-content">
+                <span className="overlay-category">{project.category}</span>
+                <h3 className="overlay-title">{project.title}</h3>
+                <p className="overlay-location">
+                  <span className="location-dot" />
+                  {project.location}
+                </p>
+                <button type="button" className="overlay-btn">
+                  View Project -&gt;
+                </button>
               </div>
             </div>
+
+            <div className="bento-expand">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M1 13L13 1M13 1H7M13 1V7"
+                  stroke="white"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="projects-marquee-wrap scroll-drift" data-scroll-speed="10">
+        <div className="projects-marquee">
+          {[...marqueeClients, ...marqueeClients].map((name, index) => (
+            <span key={`${name}-${index}`} className="marquee-item">
+              <span className="marquee-dot" />
+              {name}
+            </span>
           ))}
         </div>
-
-        <div className="mt-12 text-center md:hidden">
-          <Link
-            to="/projects"
-            className="inline-flex justify-center items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-700 hover:border-blue-500 px-8 py-4 rounded-lg font-medium text-base transition-all w-full sm:w-auto"
-          >
-            View All Projects
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
+      </div>
       </div>
     </section>
   );

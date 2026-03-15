@@ -1,91 +1,239 @@
-import { Link } from "react-router";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReveal } from "../../hooks/useReveal";
+import ProductImage from "./ProductImage";
 
-const products = [
+type Product = {
+  name: string;
+  spec: string;
+  category: string;
+  tag: string | null;
+  image: string;
+  fallback: string;
+  desc: string;
+};
+
+const products: Product[] = [
   {
-    title: "Indoor LED Screens",
-    description: "High-resolution seamless displays for presentations and retail.",
-    image: "https://images.unsplash.com/photo-1740968984962-29087e16ceff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvb3IlMjBsZWQlMjBzY3JlZW4lMjBwcmVzZW50YXRpb24lMjBjb3Jwb3JhdGV8ZW58MXx8fHwxNzczNDEyMzM1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    name: "HD LED Display",
+    spec: "P1.2 - P1.86",
+    category: "indoor",
+    tag: "Best Seller",
+    image: "/images/products/hd-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/indoor-led-display-ts1689580033.jpg",
+    desc: "Ultra-fine pixel pitch for control rooms and boardrooms.",
   },
   {
-    title: "Outdoor LED Screens",
-    description: "Weatherproof and high-brightness for impactful advertising.",
-    image: "https://images.unsplash.com/photo-1585504303098-9785dc784742?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvdXRkb29yJTIwbGVkJTIwYmlsbGJvYXJkJTIwdGltZXMlMjBzcXVhcmV8ZW58MXx8fHwxNzczNDEyMzM2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    name: "Indoor LED Display",
+    spec: "P2 - P4",
+    category: "indoor",
+    tag: null,
+    image: "/images/products/indoor-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/hd-led-display-ts1689580033.jpg",
+    desc: "High-brightness indoor panels for malls and lobbies.",
   },
   {
-    title: "Rental LED Screens",
-    description: "Quick setup displays for concerts, exhibitions, and events.",
-    image: "https://images.unsplash.com/photo-1545579905-9e4fcf9205eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdGFnZSUyMGV2ZW50JTIwbGVkJTIwc2NyZWVuJTIwcmVudGFsfGVufDF8fHx8MTc3MzQxMjMzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+    name: "Outdoor DIP Display",
+    spec: "P8 - P16",
+    category: "outdoor",
+    tag: "Weatherproof",
+    image: "/images/products/outdoor-dip.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/outdoor-smd-led-display-ts1689580033.jpg",
+    desc: "IP65-rated for UAE outdoor environments.",
   },
   {
-    title: "Advertising LED Displays",
-    description: "Engaging digital signage solutions for modern businesses.",
-    image: "https://images.unsplash.com/photo-1772859022799-eb0e04d31794?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwc2lnbmFnZSUyMGFkdmVydGlzaW5nJTIwc2NyZWVufGVufDF8fHx8MTc3MzQxMjMzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+    name: "Outdoor SMD Display",
+    spec: "P4 - P10",
+    category: "outdoor",
+    tag: null,
+    image: "/images/products/outdoor-smd.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/outdoor-dip-led-display-ts1689580033.jpg",
+    desc: "5000 nit brightness for direct sunlight visibility.",
   },
   {
-    title: "Customized Solutions",
-    description: "Curved, flexible, and unique LED screens for creative designs.",
-    image: "https://images.unsplash.com/photo-1659297396001-fa8d15dcad1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXJ2ZWQlMjBsZWQlMjBzY3JlZW4lMjBkaXNwbGF5fGVufDF8fHx8MTc3MzQxMjMzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+    name: "Transparent Glass LED",
+    spec: "P3.9 - P7.8",
+    category: "specialty",
+    tag: "Premium",
+    image: "/images/products/transparent-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/front-service-led-display-ts1689580033.jpg",
+    desc: "See-through display for retail storefronts.",
+  },
+  {
+    name: "Curtain LED Display",
+    spec: "P6 - P25",
+    category: "specialty",
+    tag: null,
+    image: "/images/products/curtain-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/creative-led-display-ts1689580033.jpg",
+    desc: "Flexible mesh screen for building facades.",
+  },
+  {
+    name: "Floor LED Display",
+    spec: "P3.9 - P6.25",
+    category: "specialty",
+    tag: "Interactive",
+    image: "/images/products/floor-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/indoor-led-display-ts1689580033.jpg",
+    desc: "Load-bearing interactive floor panels.",
+  },
+  {
+    name: "Poster LED Display",
+    spec: "P1.86 - P2.5",
+    category: "indoor",
+    tag: null,
+    image: "/images/products/poster-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/hd-led-display-ts1689580033.jpg",
+    desc: "Freestanding slim panel for retail and events.",
+  },
+  {
+    name: "Perimeter LED Display",
+    spec: "P6 - P10",
+    category: "stadium",
+    tag: null,
+    image: "/images/products/perimeter-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/outdoor-smd-led-display-ts1689580033.jpg",
+    desc: "Sports arena perimeter boards.",
+  },
+  {
+    name: "Curve LED Display",
+    spec: "P2.5 - P4",
+    category: "specialty",
+    tag: "Custom",
+    image: "/images/products/curve-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/creative-led-display-ts1689580033.jpg",
+    desc: "Concave and convex curved configurations.",
+  },
+  {
+    name: "Spherical LED Display",
+    spec: "P2.5 - P6",
+    category: "creative",
+    tag: "Signature",
+    image: "/images/products/spherical-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/creative-led-display-ts1689580033.jpg",
+    desc: "360-degree globe display for brand activations.",
+  },
+  {
+    name: "Creative LED Display",
+    spec: "Custom",
+    category: "creative",
+    tag: "Bespoke",
+    image: "/images/products/creative-led.jpg",
+    fallback: "https://www.ledscreenuae.com/gallery/curtain-led-display-ts1689580033.jpg",
+    desc: "Any shape - triangles, hexagons, waves.",
   },
 ];
 
+const categories = ["all", "indoor", "outdoor", "specialty", "stadium", "creative"];
+
 export function ProductsSection() {
   const [sectionRef, visible] = useReveal(0.12);
+  const [cardsVisible, setCardsVisible] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setCardsVisible(true);
+      },
+      { threshold: 0.08 },
+    );
+
+    const node = gridRef.current;
+    if (node) observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    if (activeCategory === "all") return products;
+    return products.filter((product) => product.category === activeCategory);
+  }, [activeCategory]);
 
   return (
-    <section ref={sectionRef} id="products" className={`py-24 bg-neutral-950 scroll-mt-24 ${visible ? "visible" : ""}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`products-heading text-center max-w-3xl mx-auto mb-16 ${visible ? "visible" : ""}`}>
-          <p className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3 reveal visible">
-            Our LED Display Range
-          </p>
-          <h3 className="font-['Poppins',_sans-serif] text-4xl lg:text-5xl font-bold text-white mb-6">
-            <span className="clip-wrap">
-              <span className="clip-text" style={{ transitionDelay: "0.1s" }}>
-                Products Built for
+    <section
+      ref={sectionRef}
+      id="products"
+      className={`products-section bg-neutral-950 scroll-mt-24 ${visible ? "visible" : ""}`}
+    >
+      <div className="max-w-7xl mx-auto products-shell section-shell">
+        <div className="products-section-header scroll-drift" data-scroll-speed="12">
+          <div className={`products-heading max-w-3xl ${visible ? "visible" : ""}`}>
+            <p className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3 reveal visible">
+              Our LED Display Range
+            </p>
+            <h3 className="font-['Poppins',_sans-serif] text-4xl lg:text-5xl font-bold text-white mb-6">
+              <span className="clip-wrap">
+                <span className="clip-text" style={{ transitionDelay: "0.1s" }}>
+                  Products Built for
+                </span>
               </span>
-            </span>
-            <span className="clip-wrap">
-              <span className="clip-text shimmer-text" style={{ transitionDelay: "0.25s" }}>
-                Every Environment
+              <span className="clip-wrap">
+                <span className="clip-text shimmer-text" style={{ transitionDelay: "0.25s" }}>
+                  Every Environment
+                </span>
               </span>
-            </span>
-          </h3>
-          <p className={`text-neutral-400 text-lg reveal ${visible ? "visible" : ""}`}>
-            Explore our comprehensive range of professional LED displays designed to meet diverse industry needs.
-          </p>
+            </h3>
+            <p className={`text-neutral-400 text-lg reveal ${visible ? "visible" : ""}`}>
+              Explore our comprehensive range of professional LED displays designed to meet
+              diverse industry needs.
+            </p>
+          </div>
         </div>
 
-        <div className="products-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product, index) => (
-            <div
-              key={product.title}
-              className={`product-card group flex flex-col opacity-0 translate-y-8 ${visible ? "visible" : ""}`}
-              style={{ transitionDelay: `${index * 0.08}s` }}
+        <div className="product-filters scroll-drift" data-scroll-speed="8">
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              className={`product-filter-btn ${activeCategory === category ? "active" : ""}`}
+              onClick={() => setActiveCategory(category)}
             >
-              <div className="aspect-[4/3] overflow-hidden relative">
-                <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
-                <img
+              {category === "all"
+                ? "All Products"
+                : `${category.charAt(0).toUpperCase()}${category.slice(1)}`}
+            </button>
+          ))}
+        </div>
+
+        <div ref={gridRef} className="products-grid scroll-drift" data-scroll-speed="-8">
+          {filteredProducts.map((product, index) => (
+            <div
+              className={`product-card ${cardsVisible ? "visible" : ""}`}
+              style={{
+                transitionDelay: `${index * 0.06}s`,
+                animation: cardsVisible ? "filterIn 0.4s cubic-bezier(0.22,1,0.36,1) both" : undefined,
+              }}
+              key={product.name}
+            >
+              <div className="pcard-img-wrap">
+                <ProductImage
                   src={product.image}
-                  alt={product.title}
-                  className="product-card-img w-full h-full object-cover"
+                  alt={product.name}
+                  className="pcard-img"
                 />
+                {product.tag && <span className="pcard-tag">{product.tag}</span>}
+                <span className="pcard-category">{product.category}</span>
               </div>
-              <div className="p-8 flex flex-col flex-grow">
-                <span className="pixel-badge mb-4">Premium Series</span>
-                <h4 className="font-['Poppins',_sans-serif] text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
-                  {product.title}
-                </h4>
-                <p className="text-neutral-400 mb-8 flex-grow">{product.description}</p>
-                <Link
-                  to="/products"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-white uppercase tracking-wider group-hover:text-blue-500 transition-colors mt-auto"
-                >
-                  View Details
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
+
+              <div className="pcard-body">
+                <div className="pcard-top">
+                  <h3 className="pcard-name">{product.name}</h3>
+                  <span className="pcard-spec">{product.spec}</span>
+                </div>
+                <p className="pcard-desc">{product.desc}</p>
+                <div className="pcard-footer">
+                  <button type="button" className="pcard-btn">
+                    Get Quote -&gt;
+                  </button>
+                  <div className="pcard-dots">
+                    <span className="pdot pdot-active" />
+                    <span className="pdot" />
+                    <span className="pdot" />
+                  </div>
+                </div>
               </div>
+
+              <div className="pcard-glow-line" />
             </div>
           ))}
         </div>

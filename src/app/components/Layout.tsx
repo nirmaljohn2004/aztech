@@ -60,6 +60,51 @@ export function Layout() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    let ticking = false;
+
+    const updateScrollMotion = () => {
+      const viewportHeight = window.innerHeight || 1;
+      const elements = document.querySelectorAll<HTMLElement>("[data-scroll-speed]");
+
+      elements.forEach((element) => {
+        const speed = Number.parseFloat(element.dataset.scrollSpeed ?? "0");
+        const axis = element.dataset.scrollAxis ?? "y";
+        const rect = element.getBoundingClientRect();
+        const centerOffset = rect.top + rect.height / 2 - viewportHeight / 2;
+        const progress = centerOffset / viewportHeight;
+        const shift = Math.max(-60, Math.min(60, -progress * speed));
+
+        element.style.setProperty("--scroll-shift", `${shift.toFixed(2)}px`);
+        element.style.setProperty(
+          "--scroll-shift-x",
+          axis === "x" ? `${shift.toFixed(2)}px` : "0px",
+        );
+        element.style.setProperty(
+          "--scroll-shift-y",
+          axis === "x" ? "0px" : `${shift.toFixed(2)}px`,
+        );
+      });
+
+      ticking = false;
+    };
+
+    const requestTick = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateScrollMotion);
+    };
+
+    requestTick();
+    window.addEventListener("scroll", requestTick, { passive: true });
+    window.addEventListener("resize", requestTick);
+
+    return () => {
+      window.removeEventListener("scroll", requestTick);
+      window.removeEventListener("resize", requestTick);
+    };
+  }, []);
+
   const navigation = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
