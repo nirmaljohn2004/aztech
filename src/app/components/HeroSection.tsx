@@ -37,6 +37,29 @@ export function HeroSection() {
     };
   }, []);
 
+  useEffect(() => {
+    const hero = document.querySelector<HTMLElement>(".hero");
+    const video = document.querySelector<HTMLElement>(".hero-video");
+    if (!hero || !video) return;
+
+    const onMouse = (event: MouseEvent) => {
+      const xPct = (event.clientX / window.innerWidth - 0.5) * 2;
+      const yPct = (event.clientY / window.innerHeight - 0.5) * 2;
+      video.style.transform = `scale(1.06) translate(${xPct * 8}px, ${yPct * 5}px)`;
+    };
+
+    const onLeave = () => {
+      video.style.transform = "scale(1) translate(0, 0)";
+    };
+
+    hero.addEventListener("mousemove", onMouse);
+    hero.addEventListener("mouseleave", onLeave);
+    return () => {
+      hero.removeEventListener("mousemove", onMouse);
+      hero.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
+
   return (
     <section id="top" className="hero">
       <div className="hero-bg" aria-hidden="true">

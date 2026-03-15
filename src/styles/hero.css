@@ -39,6 +39,8 @@
   object-fit: cover;
   object-position: center;
   z-index: 0;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
 .hero-overlay {

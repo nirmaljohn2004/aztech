@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { motion } from "motion/react";
+import { useReveal } from "../../hooks/useReveal";
 
 const products = [
   {
@@ -31,44 +31,53 @@ const products = [
 ];
 
 export function ProductsSection() {
+  const [sectionRef, visible] = useReveal(0.12);
+
   return (
-    <section id="products" className="py-24 bg-neutral-950 scroll-mt-24">
+    <section ref={sectionRef} id="products" className={`py-24 bg-neutral-950 scroll-mt-24 ${visible ? "visible" : ""}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3">Our Products</h2>
+        <div className={`products-heading text-center max-w-3xl mx-auto mb-16 ${visible ? "visible" : ""}`}>
+          <p className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3 reveal visible">
+            Our LED Display Range
+          </p>
           <h3 className="font-['Poppins',_sans-serif] text-4xl lg:text-5xl font-bold text-white mb-6">
-            LED Screen Solutions
+            <span className="clip-wrap">
+              <span className="clip-text" style={{ transitionDelay: "0.1s" }}>
+                Products Built for
+              </span>
+            </span>
+            <span className="clip-wrap">
+              <span className="clip-text shimmer-text" style={{ transitionDelay: "0.25s" }}>
+                Every Environment
+              </span>
+            </span>
           </h3>
-          <p className="text-neutral-400 text-lg">
+          <p className={`text-neutral-400 text-lg reveal ${visible ? "visible" : ""}`}>
             Explore our comprehensive range of professional LED displays designed to meet diverse industry needs.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="products-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product, index) => (
-            <motion.div
+            <div
               key={product.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group bg-neutral-900 rounded-2xl overflow-hidden border border-neutral-800 hover:border-neutral-700 transition-colors flex flex-col"
+              className={`product-card group flex flex-col opacity-0 translate-y-8 ${visible ? "visible" : ""}`}
+              style={{ transitionDelay: `${index * 0.08}s` }}
             >
               <div className="aspect-[4/3] overflow-hidden relative">
                 <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="product-card-img w-full h-full object-cover"
                 />
               </div>
               <div className="p-8 flex flex-col flex-grow">
+                <span className="pixel-badge mb-4">Premium Series</span>
                 <h4 className="font-['Poppins',_sans-serif] text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
                   {product.title}
                 </h4>
-                <p className="text-neutral-400 mb-8 flex-grow">
-                  {product.description}
-                </p>
+                <p className="text-neutral-400 mb-8 flex-grow">{product.description}</p>
                 <Link
                   to="/products"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-white uppercase tracking-wider group-hover:text-blue-500 transition-colors mt-auto"
@@ -77,7 +86,7 @@ export function ProductsSection() {
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

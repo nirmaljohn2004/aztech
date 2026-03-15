@@ -1,12 +1,64 @@
 import { Outlet, Link, useLocation } from "react-router";
-import { Monitor, Menu, X, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { useEffect, useState } from "react";
 import aztechLogo from "../../assets/aztech_logo.svg";
+import { useReveal } from "../../hooks/useReveal";
+
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const total = document.body.scrollHeight - window.innerHeight;
+      const next = total > 0 ? (window.scrollY / total) * 100 : 0;
+      setProgress(next);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return <div className="site-progress" style={{ width: `${progress}%` }} />;
+}
+
+function BackToTop() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 500);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (!show) return null;
+
+  return (
+    <button
+      type="button"
+      className="back-to-top"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      aria-label="Back to top"
+    >
+      ↑
+    </button>
+  );
+}
 
 export function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const [footerRef, footerVisible] = useReveal(0.15);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -23,10 +75,11 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white font-['Inter',_sans-serif] flex flex-col">
+      <ScrollProgress />
       {!isHomePage && (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800">
+        <header className={`site-header fixed top-0 left-0 right-0 z-50 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800 ${scrolled ? "scrolled" : ""}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-24">
+            <div className="site-header-inner flex justify-between items-center h-24 transition-[height] duration-400">
               <Link to="/" className="flex items-center gap-2 h-full">
                 <img src={aztechLogo} alt="AZTECH logo" className="h-full w-auto" />
               </Link>
@@ -36,7 +89,7 @@ export function Layout() {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`text-sm font-medium transition-colors hover:text-blue-400 ${
+                    className={`site-nav-link text-sm font-medium transition-colors hover:text-blue-400 ${
                       isActive(item.href) ? "text-blue-500" : "text-neutral-300"
                     }`}
                   >
@@ -95,14 +148,14 @@ export function Layout() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-neutral-950 border-t border-neutral-800 pt-16 pb-8">
+      <footer ref={footerRef as React.RefObject<HTMLElement>} className={`bg-neutral-950 border-t border-neutral-800 pt-16 pb-8 ${footerVisible ? "visible" : ""}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             {/* Company Info */}
             <div className="space-y-4">
               <Link
                 to="/"
-                className="inline-flex items-center rounded-xl bg-white px-4 py-3 shadow-[0_10px_30px_rgba(255,255,255,0.08)]"
+                className={`footer-logo inline-flex items-center rounded-xl bg-white px-4 py-3 shadow-[0_10px_30px_rgba(255,255,255,0.08)] ${footerVisible ? "visible" : ""}`}
               >
                 <img src={aztechLogo} alt="AZTECH logo" className="h-10 w-auto" />
               </Link>
@@ -110,16 +163,16 @@ export function Layout() {
                 Professional supplier of high-quality LED display solutions for events, advertising, and commercial spaces across the UAE.
               </p>
               <div className="flex gap-4 pt-2">
-                <a href="#" className="text-neutral-400 hover:text-blue-500 transition-colors">
+                <a href="#" className="social-icon text-neutral-400 hover:text-blue-500 transition-colors">
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-neutral-400 hover:text-blue-500 transition-colors">
+                <a href="#" className="social-icon text-neutral-400 hover:text-blue-500 transition-colors">
                   <Twitter className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-neutral-400 hover:text-blue-500 transition-colors">
+                <a href="#" className="social-icon text-neutral-400 hover:text-blue-500 transition-colors">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-neutral-400 hover:text-blue-500 transition-colors">
+                <a href="#" className="social-icon text-neutral-400 hover:text-blue-500 transition-colors">
                   <Linkedin className="w-5 h-5" />
                 </a>
               </div>
@@ -133,7 +186,7 @@ export function Layout() {
                   <li key={item.name}>
                     <Link
                       to={item.href}
-                      className="text-neutral-400 hover:text-blue-400 text-sm transition-colors"
+                      className="footer-link text-neutral-400 hover:text-blue-400 text-sm transition-colors"
                     >
                       {item.name}
                     </Link>
@@ -146,10 +199,10 @@ export function Layout() {
             <div>
               <h3 className="font-['Poppins',_sans-serif] font-semibold text-white mb-4">Our Services</h3>
               <ul className="space-y-3">
-                <li><Link to="/products" className="text-neutral-400 hover:text-blue-400 text-sm transition-colors">Indoor LED Screens</Link></li>
-                <li><Link to="/products" className="text-neutral-400 hover:text-blue-400 text-sm transition-colors">Outdoor LED Screens</Link></li>
-                <li><Link to="/products" className="text-neutral-400 hover:text-blue-400 text-sm transition-colors">Rental LED Displays</Link></li>
-                <li><Link to="/products" className="text-neutral-400 hover:text-blue-400 text-sm transition-colors">Custom Solutions</Link></li>
+                <li><Link to="/products" className="footer-link text-neutral-400 hover:text-blue-400 text-sm transition-colors">Indoor LED Screens</Link></li>
+                <li><Link to="/products" className="footer-link text-neutral-400 hover:text-blue-400 text-sm transition-colors">Outdoor LED Screens</Link></li>
+                <li><Link to="/products" className="footer-link text-neutral-400 hover:text-blue-400 text-sm transition-colors">Rental LED Displays</Link></li>
+                <li><Link to="/products" className="footer-link text-neutral-400 hover:text-blue-400 text-sm transition-colors">Custom Solutions</Link></li>
               </ul>
             </div>
 
@@ -178,12 +231,13 @@ export function Layout() {
               &copy; {new Date().getFullYear()} AZTECH. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link to="#" className="text-neutral-500 hover:text-white text-sm">Privacy Policy</Link>
-              <Link to="#" className="text-neutral-500 hover:text-white text-sm">Terms of Service</Link>
+              <Link to="#" className="footer-link text-neutral-500 hover:text-white text-sm">Privacy Policy</Link>
+              <Link to="#" className="footer-link text-neutral-500 hover:text-white text-sm">Terms of Service</Link>
             </div>
           </div>
         </div>
       </footer>
+      <BackToTop />
     </div>
   );
 }
