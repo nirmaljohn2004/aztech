@@ -31,7 +31,7 @@ const features = [
 
 export function WhyChooseUs() {
   return (
-    <section className="py-24 bg-neutral-900 border-y border-neutral-800 relative overflow-hidden">
+    <section id="services" className="py-24 bg-neutral-900 border-y border-neutral-800 relative overflow-hidden scroll-mt-24">
       {/* Abstract Background Element */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[120px] pointer-events-none" />
 

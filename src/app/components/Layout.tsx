@@ -6,6 +6,7 @@ import aztechLogo from "../../assets/aztech_logo.svg";
 export function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -22,78 +23,74 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white font-['Inter',_sans-serif] flex flex-col">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 h-full">
-              <img src={aztechLogo} alt="AZTECH logo" className="h-full w-auto" />
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`text-sm font-medium transition-colors hover:text-blue-400 ${
-                    isActive(item.href) ? "text-blue-500" : "text-neutral-300"
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <Link
-                to="/get-quote"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-md font-medium text-sm transition-colors"
-              >
-                Get a Quote
+      {!isHomePage && (
+        <header className="fixed top-0 left-0 right-0 z-50 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-24">
+              <Link to="/" className="flex items-center gap-2 h-full">
+                <img src={aztechLogo} alt="AZTECH logo" className="h-full w-auto" />
               </Link>
-            </nav>
 
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-neutral-400 hover:text-white"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-neutral-900 border-b border-neutral-800">
-            <div className="px-4 pt-2 pb-6 space-y-1">
-              {navigation.map((item) => (
+              <nav className="hidden md:flex items-center gap-8">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`text-sm font-medium transition-colors hover:text-blue-400 ${
+                      isActive(item.href) ? "text-blue-500" : "text-neutral-300"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
                 <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-3 py-3 rounded-md text-base font-medium ${
-                    isActive(item.href)
-                      ? "bg-neutral-800 text-blue-500"
-                      : "text-neutral-300 hover:bg-neutral-800 hover:text-white"
-                  }`}
+                  to="/get-quote"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-md font-medium text-sm transition-colors"
                 >
-                  {item.name}
+                  Get a Quote
                 </Link>
-              ))}
-              <Link
-                to="/get-quote"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center mt-4 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-md font-medium text-base transition-colors"
+              </nav>
+
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 text-neutral-400 hover:text-white"
               >
-                Get a Quote
-              </Link>
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
           </div>
-        )}
-      </header>
 
-      {/* Main Content */}
-      <main className="flex-grow pt-20">
+          {isMobileMenuOpen && (
+            <div className="md:hidden bg-neutral-900 border-b border-neutral-800">
+              <div className="px-4 pt-2 pb-6 space-y-1">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block px-3 py-3 rounded-md text-base font-medium ${
+                      isActive(item.href)
+                        ? "bg-neutral-800 text-blue-500"
+                        : "text-neutral-300 hover:bg-neutral-800 hover:text-white"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                <Link
+                  to="/get-quote"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full text-center mt-4 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-md font-medium text-base transition-colors"
+                >
+                  Get a Quote
+                </Link>
+              </div>
+            </div>
+          )}
+        </header>
+      )}
+
+      <main className={`flex-grow ${isHomePage ? "" : "pt-20"}`}>
         <Outlet />
       </main>
 
@@ -103,7 +100,10 @@ export function Layout() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             {/* Company Info */}
             <div className="space-y-4">
-              <Link to="/" className="flex items-center gap-2">
+              <Link
+                to="/"
+                className="inline-flex items-center rounded-xl bg-white px-4 py-3 shadow-[0_10px_30px_rgba(255,255,255,0.08)]"
+              >
                 <img src={aztechLogo} alt="AZTECH logo" className="h-10 w-auto" />
               </Link>
               <p className="text-neutral-400 text-sm leading-relaxed">

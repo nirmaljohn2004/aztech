@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 export function CtaSection() {
   return (
-    <section className="py-24 bg-blue-600 relative overflow-hidden">
+    <section id="contact" className="py-24 bg-blue-600 relative overflow-hidden scroll-mt-24">
       {/* Background elements */}
       <div className="absolute inset-0 z-0 opacity-10 mix-blend-overlay pointer-events-none">
         <div className="absolute -top-[50%] -left-[10%] w-[120%] h-[200%] bg-[radial-gradient(circle_at_center,white,transparent_60%)] rotate-12 blur-3xl" />

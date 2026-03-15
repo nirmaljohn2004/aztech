@@ -32,7 +32,7 @@ const products = [
 
 export function ProductsSection() {
   return (
-    <section className="py-24 bg-neutral-950">
+    <section id="products" className="py-24 bg-neutral-950 scroll-mt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3">Our Products</h2>
