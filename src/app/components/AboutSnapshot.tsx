@@ -55,11 +55,11 @@ export function AboutSnapshot() {
             <span>About Us</span>
           </div>
 
-          <h2 className="about-headline">
+          <h2 className="about-headline section-title-glow">
             {["Your", "Professional", "LED", "Partner"].map((word, index) => (
               <span className="clip-wrap about-headline-line" key={word}>
                 <span
-                  className={`clip-text ${leftVisible ? "visible" : ""}`}
+                  className={`${word === "Partner" ? "clip-text shimmer-text" : "clip-text"} ${leftVisible ? "visible" : ""}`}
                   style={{ transitionDelay: `${0.1 + index * 0.12}s` }}
                 >
                   {word}

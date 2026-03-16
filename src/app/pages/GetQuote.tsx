@@ -13,7 +13,10 @@ export default function GetQuote() {
       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 md:p-10">
         <div className="mb-8">
           <p className="text-sm uppercase tracking-[0.25em] text-blue-400 font-semibold">Get Quote</p>
-          <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-white">Request a Free LED Quotation</h1>
+          <h1 className="section-title-glow mt-3 font-['Bebas_Neue',_sans-serif] text-[clamp(2.8rem,5vw,4.8rem)] leading-[0.92] tracking-[0.02em] text-white">
+            <span>Request a Free LED </span>
+            <span className="shimmer-text">Quotation</span>
+          </h1>
           <p className="mt-2 text-neutral-300 max-w-2xl">
             Tell us more about your installation, venue, and timeline. Our engineers will provide a tailored quote for indoor/outdoor LED display solutions.
           </p>

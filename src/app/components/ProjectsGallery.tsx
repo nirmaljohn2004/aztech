@@ -150,7 +150,7 @@ export function ProjectsGallery() {
             <span className="eyebrow-dot" />
             Featured Projects
           </div>
-          <h2 className="projects-title">
+          <h2 className="projects-title section-title-glow">
             <span className="clip-wrap">
               <span
                 className={`clip-text ${visible ? "visible" : ""}`}
@@ -270,3 +270,4 @@ export function ProjectsGallery() {
     </section>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import aztechLogo from "../../assets/aztech_logo.svg";
 
@@ -13,9 +13,20 @@ const markets = [
   "airport terminals",
 ];
 
+const HERO_VIDEO_SRC = "/videos/hero-optimized.mp4";
+const HERO_POSTER_SRC = "/images/products/outdoor-smd.jpg";
+
+type ConnectionInfo = {
+  saveData?: boolean;
+  effectiveType?: string;
+};
+
 export function HeroSection() {
   const [marketIndex, setMarketIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     let timeoutId: number | undefined;
@@ -38,9 +49,29 @@ export function HeroSection() {
   }, []);
 
   useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: ConnectionInfo }).connection;
+    const shouldSkipVideo =
+      connection?.saveData ||
+      connection?.effectiveType === "slow-2g" ||
+      connection?.effectiveType === "2g";
+
+    if (shouldSkipVideo) return;
+
+    const loadVideo = () => setShouldLoadVideo(true);
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(loadVideo, { timeout: 1200 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timer = window.setTimeout(loadVideo, 250);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const hero = document.querySelector<HTMLElement>(".hero");
-    const video = document.querySelector<HTMLElement>(".hero-video");
-    if (!hero || !video) return;
+    const video = videoRef.current;
+    if (!hero || !video || !videoReady) return;
 
     const onMouse = (event: MouseEvent) => {
       const xPct = (event.clientX / window.innerWidth - 0.5) * 2;
@@ -58,14 +89,32 @@ export function HeroSection() {
       hero.removeEventListener("mousemove", onMouse);
       hero.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [videoReady]);
 
   return (
     <section id="top" className="hero">
       <div className="hero-bg scroll-drift" data-scroll-speed="-22" aria-hidden="true">
-        <video autoPlay muted loop playsInline className="hero-video">
-          <source src="/videos/hero.mp4" type="video/mp4" />
-        </video>
+        <div
+          className={`hero-poster ${videoReady ? "hidden" : ""}`}
+          style={{ backgroundImage: `url(${HERO_POSTER_SRC})` }}
+        />
+        {shouldLoadVideo && (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={HERO_POSTER_SRC}
+            className={`hero-video ${videoReady ? "ready" : ""}`}
+            onLoadedData={() => setVideoReady(true)}
+            onCanPlay={() => setVideoReady(true)}
+            onError={() => setVideoReady(false)}
+          >
+            <source src={HERO_VIDEO_SRC} type="video/mp4" />
+          </video>
+        )}
         <div className="hero-overlay" />
         <div className="hero-grid" />
       </div>
@@ -171,3 +220,4 @@ export function HeroSection() {
     </section>
   );
 }
+

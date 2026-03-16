@@ -161,7 +161,7 @@ export function ProductsSection() {
             <p className="text-sm font-semibold tracking-widest text-blue-500 uppercase mb-3 reveal visible">
               Our LED Display Range
             </p>
-            <h3 className="font-['Poppins',_sans-serif] text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h3 className="section-title-glow font-['Bebas_Neue',_sans-serif] text-[clamp(3.6rem,6vw,5.8rem)] leading-[0.92] tracking-[0.02em] text-white mb-6">
               <span className="clip-wrap">
                 <span className="clip-text" style={{ transitionDelay: "0.1s" }}>
                   Products Built for
@@ -241,3 +241,7 @@ export function ProductsSection() {
     </section>
   );
 }
+
+
+
+

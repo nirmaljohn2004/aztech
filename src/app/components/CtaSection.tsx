@@ -17,10 +17,16 @@ export function CtaSection() {
           <div className="inline-flex justify-center items-center w-16 h-16 rounded-full bg-white/20 mb-8 backdrop-blur-sm border border-white/30">
             <Mail className="w-8 h-8 text-white" />
           </div>
-          <h2 className="cta-heading font-['Poppins',_sans-serif] text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-8 tracking-tight leading-tight">
-            <span className={`clip-wrap ${visible ? "visible" : ""}`}><span className="clip-text">Looking for a reliable</span></span>
-            <span className={`clip-wrap ${visible ? "visible" : ""}`}><span className="clip-text">LED screen partner</span></span>
-            <span className={`clip-wrap ${visible ? "visible" : ""}`}><span className="clip-text">in UAE?</span></span>
+          <h2 className="cta-heading section-title-glow font-['Poppins',_sans-serif] text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-8 tracking-tight leading-tight">
+            <span className={`clip-wrap ${visible ? "visible" : ""}`}>
+              <span className="clip-text">Looking for a reliable</span>
+            </span>
+            <span className={`clip-wrap ${visible ? "visible" : ""}`}>
+              <span className="clip-text shimmer-text">LED screen partner</span>
+            </span>
+            <span className={`clip-wrap ${visible ? "visible" : ""}`}>
+              <span className="clip-text">in UAE?</span>
+            </span>
           </h2>
           <p className={`text-xl text-blue-100 font-light mb-12 max-w-2xl mx-auto reveal ${visible ? "visible" : ""}`}>
             Get expert advice and the best prices for your next LED display project. Connect with our technical team today.

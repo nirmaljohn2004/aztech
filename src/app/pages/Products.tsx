@@ -43,7 +43,6 @@ const detailedProducts = [
 export default function Products() {
   return (
     <div className="bg-neutral-950 min-h-screen pt-20">
-      {/* Page Header */}
       <div className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden border-b border-neutral-800">
         <div className="absolute inset-0 z-0">
           <img
@@ -54,15 +53,16 @@ export default function Products() {
           <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/80 to-neutral-950/20" />
         </div>
         <div className="relative z-10 text-center px-4">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="font-['Poppins',_sans-serif] text-4xl md:text-5xl font-bold text-white mb-4"
+            className="section-title-glow font-['Bebas_Neue',_sans-serif] text-[clamp(3.2rem,6vw,5.4rem)] leading-[0.92] tracking-[0.02em] text-white mb-4"
           >
-            Our Products
+            <span>Our </span>
+            <span className="shimmer-text">Products</span>
           </motion.h1>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -71,13 +71,16 @@ export default function Products() {
         </div>
       </div>
 
-      {/* Main Content */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-20">
-            <h2 className="text-neutral-400 text-lg md:text-xl font-light leading-relaxed">
-              We offer a comprehensive portfolio of professional LED display technology. Each product line is built for reliability, visual clarity, and seamless integration into its intended environment.
+            <h2 className="section-title-glow font-['Bebas_Neue',_sans-serif] text-[clamp(2.4rem,4.6vw,3.8rem)] leading-[0.95] tracking-[0.02em] text-white mb-5">
+              <span>Professional LED </span>
+              <span className="shimmer-text">Technology</span>
             </h2>
+            <p className="text-neutral-400 text-lg md:text-xl font-light leading-relaxed">
+              We offer a comprehensive portfolio of professional LED display technology. Each product line is built for reliability, visual clarity, and seamless integration into its intended environment.
+            </p>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
