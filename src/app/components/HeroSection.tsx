@@ -14,7 +14,6 @@ const markets = [
 ];
 
 const HERO_VIDEO_SRC = "/videos/hero-optimized.mp4";
-const HERO_POSTER_SRC = "/images/products/outdoor-smd.jpg";
 
 type ConnectionInfo = {
   saveData?: boolean;
@@ -93,21 +92,14 @@ export function HeroSection() {
 
   return (
     <section id="top" className="hero">
-      <div className="hero-bg scroll-drift" data-scroll-speed="-22" aria-hidden="true">
-        <div
-          className={`hero-poster ${videoReady ? "hidden" : ""}`}
-          style={{ backgroundImage: `url(${HERO_POSTER_SRC})` }}
-        />
-        {shouldLoadVideo && (
+      <div className="hero-bg scroll-drift" data-scroll-speed="-22" aria-hidden="true">        {shouldLoadVideo && (
           <video
             ref={videoRef}
             autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
-            poster={HERO_POSTER_SRC}
-            className={`hero-video ${videoReady ? "ready" : ""}`}
+            preload="metadata"            className={`hero-video ${videoReady ? "ready" : ""}`}
             onLoadedData={() => setVideoReady(true)}
             onCanPlay={() => setVideoReady(true)}
             onError={() => setVideoReady(false)}
@@ -220,4 +212,6 @@ export function HeroSection() {
     </section>
   );
 }
+
+
 
